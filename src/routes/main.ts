@@ -8,7 +8,7 @@ import { performance } from "perf_hooks";
 const router = Router();
 
 const parseWhois = (whoisOutput: string): Record<string, string> => {
-    const lines = whoisOutput.split("\n");
+    const lines = whoisOutput.split("\n").filter((x) => x.trim() !== "");
     const result: Record<string, string> = {};
     const formatKey = (key: string): string => {
         return key.toLowerCase().replace(" ", "_");
