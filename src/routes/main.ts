@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Jsend from "../helpers/jsend";
 import validator from 'validator';
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
 import config from '../config/main';
 import { performance } from "perf_hooks";
 
@@ -79,7 +79,9 @@ router.get("/", (req, res) => {
     }
 
     const whoisCmd = `whois -h bgp.tools ${ip}`;
-    const whoisOutput = parseWhois(execSync(whoisCmd).toString());
+    const whoisOutput = parseWhois(
+        spawn("sh", ["-c", whoisCmd]).stdout.toString()
+    );
     
     return res.json(Jsend.success({
         ip: ip,
