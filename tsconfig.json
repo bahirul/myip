@@ -1,9 +1,8 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "esnext",                                  
-    "module": "esnext",
-    "moduleResolution": "node",                                                       
+    "target": "ES2016",
+    "module": "commonjs",
     "outDir": "./dist",                                  
     "esModuleInterop": true,                         
     "forceConsistentCasingInFileNames": true,           
