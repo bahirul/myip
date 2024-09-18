@@ -101,7 +101,7 @@ router.get("/", async (req, res) => {
         }));
     }
 
-    const nodeCache = new NodeCache({ stdTTL: 30 * 24 * 60 * 60, checkperiod: (30 * 24 * 60 * 60) + 60 });
+    const nodeCache = new NodeCache({ stdTTL: 7 * 24 * 60 * 60, checkperiod: (7 * 24 * 60 * 60) + 60 });
     const cacheQuery = nodeCache.get(ip);
 
     let whoisOutput: Record<string, string> = {};
