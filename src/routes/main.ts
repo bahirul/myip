@@ -103,8 +103,15 @@ router.get("/", (req, res) => {
     const nodeCache = new NodeCache({ stdTTL: 30 * 24 * 60 * 60, checkperiod: (30 * 24 * 60 * 60) + 60 });
     const cacheQuery = nodeCache.get(ip);
 
-    const whoisCmd = `whois -h bgp.tools ${ip}`;
-    const whoisOutput = cacheQuery === undefined ? parseWhois(execSync(whoisCmd).toString()) : cacheQuery as Record<string, string>;
+    let whoisOutput: Record<string, string> = {};
+
+    if (cacheQuery === undefined) {
+        const whoisCmd = `whois -h bgp.tools ${ip}`;
+        whoisOutput = parseWhois(execSync(whoisCmd).toString());
+        nodeCache.set(ip, whoisOutput);
+    } else {
+        whoisOutput = cacheQuery as Record<string, string>;
+    }
     
     return res.json(Jsend.success({
         ip: ip,
