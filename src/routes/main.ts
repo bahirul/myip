@@ -7,6 +7,7 @@ import { performance } from "perf_hooks";
 import NodeCache from "node-cache";
 import logger from "../utils/logger";
 
+const nodeCache = new NodeCache({ stdTTL: 14 * 24 * 60 * 60, checkperiod: (14 * 24 * 60 * 60) + 30 });
 const router = Router();
 
 const parseWhois = (whoisOutput: string): Record<string, string> => {
@@ -32,6 +33,7 @@ router.get("/", async (req, res) => {
     const startTime = performance.now();
 
     const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress) as string;
+    
     let type: string | null = null;
 
     if (validator.isIP(ip, 4)) {
@@ -101,7 +103,6 @@ router.get("/", async (req, res) => {
         }));
     }
 
-    const nodeCache = new NodeCache({ stdTTL: 7 * 24 * 60 * 60, checkperiod: (7 * 24 * 60 * 60) + 60 });
     const cacheQuery = nodeCache.get(ip);
 
     let whoisOutput: Record<string, string> = {};
