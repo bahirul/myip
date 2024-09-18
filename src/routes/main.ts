@@ -5,6 +5,8 @@ import { execSync } from 'child_process';
 import config from '../config/main';
 import { performance } from "perf_hooks";
 import NodeCache from "node-cache";
+import logger from "../utils/logger";
+import chalk from "chalk";
 
 const router = Router();
 
@@ -106,10 +108,12 @@ router.get("/", (req, res) => {
     let whoisOutput: Record<string, string> = {};
 
     if (cacheQuery === undefined) {
+        logger.info(`Cache ${chalk.yellow('MISS')} for IP: ` + ip);
         const whoisCmd = `whois -h bgp.tools ${ip}`;
         whoisOutput = parseWhois(execSync(whoisCmd).toString());
         nodeCache.set(ip, whoisOutput);
     } else {
+        logger.info(`Cache ${chalk.green('HIT')} for IP: ` + ip);
         whoisOutput = cacheQuery as Record<string, string>;
     }
     
