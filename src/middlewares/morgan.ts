@@ -10,7 +10,8 @@ morgan.token('body', (req: Request): string => {
     return config.env === 'development' && Object.keys(req.body).length > 0 ? `- ${JSON.stringify(req.body)} -` : ''
 });
 
-const morganMiddleware = morgan(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const morganMiddleware: any = morgan(
     ':method :url :body :status :res[content-length] - :response-time ms',
     {
         stream: {

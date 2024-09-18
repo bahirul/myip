@@ -1,4 +1,11 @@
 import path from "path";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// __dirname equivalent for ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 /**
  * PathMapper class to resolve paths with aliases

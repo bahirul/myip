@@ -29,7 +29,7 @@ const parseWhois = (whoisOutput: string): Record<string, string> => {
     return result;
 }
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
     const startTime = performance.now();
 
     const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress) as string;
