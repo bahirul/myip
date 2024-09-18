@@ -4,6 +4,7 @@ import validator from 'validator';
 import { execSync } from 'child_process';
 import config from '../config/main';
 import { performance } from "perf_hooks";
+import NodeCache from "node-cache";
 
 const router = Router();
 
@@ -41,20 +42,42 @@ router.get("/", (req, res) => {
     }
 
     // private ipv4 ranges
-    if (type == "ipv4" && (
-        ip.startsWith("10.") || ip.startsWith("192.168.") || ip.startsWith("172.16.") ||
-        ip.startsWith("172.17.") || ip.startsWith("172.18.") || ip.startsWith("172.19.") ||
-        ip.startsWith("172.20.") || ip.startsWith("172.21.") || ip.startsWith("172.22.") ||
-        ip.startsWith("172.23.") || ip.startsWith("172.24.") || ip.startsWith("172.25.") ||
-        ip.startsWith("172.26.") || ip.startsWith("172.27.") || ip.startsWith("172.28.") ||
-        ip.startsWith("172.29.") || ip.startsWith("172.30.") || ip.startsWith("172.31.") ||
-        ip.startsWith("127."))
-    ) {
+    const ipv4PrivateRanges = [
+        "10.",
+        "192.168.",
+        "172.16.",
+        "172.17.",
+        "172.18.",
+        "172.19.",
+        "172.20.",
+        "172.21.",
+        "172.22.",
+        "172.23.",
+        "172.24.",
+        "172.25.",
+        "172.26.",
+        "172.27.",
+        "172.28.",
+        "172.29.",
+        "172.30.",
+        "172.31.",
+        "127."
+    ];
+
+    
+    if (type == "ipv4" && ipv4PrivateRanges.some((x) => ip.startsWith(x))) {
         type = null;
     }
 
     // private ipv6 ranges
-    if (type == "ipv6" && (ip.startsWith("fc00:") || ip.startsWith("fd00:") || ip.startsWith("fe80:") || ip.startsWith("::1"))) {
+    const ipv6PrivateRanges = [
+        "fc00:",
+        "fd00:",
+        "fe80:",
+        "::1"
+    ];
+
+    if (type == "ipv6" && ipv6PrivateRanges.some((x) => ip.startsWith(x))) {
         type = null;
     }
 
@@ -66,7 +89,6 @@ router.get("/", (req, res) => {
             }));
         }
 
-        
         return res.json(Jsend.success({
             ip: null,
             type: null,
@@ -78,9 +100,11 @@ router.get("/", (req, res) => {
         }));
     }
 
+    const nodeCache = new NodeCache({ stdTTL: 30 * 24 * 60 * 60, checkperiod: (30 * 24 * 60 * 60) + 60 });
+    const cacheQuery = nodeCache.get(ip);
+
     const whoisCmd = `whois -h bgp.tools ${ip}`;
-    const whoisExec = execSync(whoisCmd).toString();
-    const whoisOutput = parseWhois(whoisExec);
+    const whoisOutput = cacheQuery === undefined ? parseWhois(execSync(whoisCmd).toString()) : cacheQuery as Record<string, string>;
     
     return res.json(Jsend.success({
         ip: ip,

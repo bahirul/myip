@@ -11,6 +11,7 @@ export default {
     host: 'localhost',
     errorOnUndefinedIp: false, // return error (400) if the IP is private or not detected
     prettyOutput: true, // return pretty output
+    trustProxy: true, // trust the reverse proxy
 
     /**
      * winston logging configuration

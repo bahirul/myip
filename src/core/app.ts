@@ -23,6 +23,11 @@ class App {
     }
 
     private _registerMiddlewares() {
+        // trust proxy
+        if(config.trustProxy === true) {
+            this.app.set("trust proxy", true);
+        }
+
         this.app.use(morganMiddleware);
         this.app.use(bodyParser.json());
         this.app.use(cors());
