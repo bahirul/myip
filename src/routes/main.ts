@@ -44,51 +44,11 @@ router.get("/", async (req, res) => {
         type = "ipv6";
     }
 
-    // private ipv4 ranges
-    const ipv4PrivateRanges = [
-        "10.",
-        "192.168.",
-        "172.16.",
-        "172.17.",
-        "172.18.",
-        "172.19.",
-        "172.20.",
-        "172.21.",
-        "172.22.",
-        "172.23.",
-        "172.24.",
-        "172.25.",
-        "172.26.",
-        "172.27.",
-        "172.28.",
-        "172.29.",
-        "172.30.",
-        "172.31.",
-        "127."
-    ];
-
-    
-    if (type == "ipv4" && ipv4PrivateRanges.some((x) => ip.startsWith(x))) {
-        type = null;
-    }
-
-    // private ipv6 ranges
-    const ipv6PrivateRanges = [
-        "fc00:",
-        "fd00:",
-        "fe80:",
-        "::1"
-    ];
-
-    if (type == "ipv6" && ipv6PrivateRanges.some((x) => ip.startsWith(x))) {
-        type = null;
-    }
-
     // if no ip address is found
     if (type === null) {
         if (config.errorOnUndefinedIp === true) {
             return res.status(400).json(Jsend.fail({
-                message: "no public ip address detected"
+                message: "no ip address detected"
             }));
         }
 
