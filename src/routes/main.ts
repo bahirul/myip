@@ -69,7 +69,7 @@ router.get("/", async (req, res) => {
 
     if (cacheQuery === undefined) {
         logger.info(`Cache MISS for IP: ` + ip);
-        const whoisCmd = `whois -h bgp.tools ${ip}`;
+        const whoisCmd = `whois -h bgp.tools " -v ${ip}"`;
         whoisOutput = parseWhois(execSync(whoisCmd).toString());
         nodeCache.set(ip, whoisOutput);
     } else {
