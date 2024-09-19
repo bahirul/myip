@@ -68,12 +68,12 @@ router.get("/", async (req, res) => {
     let whoisOutput: Record<string, string> = {};
 
     if (cacheQuery === undefined) {
-        logger.info(`Cache MISS for IP: ` + ip);
+        logger.info(`⚪️ Cache MISS for IP: ` + ip);
         const whoisCmd = `whois -h bgp.tools " -v ${ip}"`;
         whoisOutput = parseWhois(execSync(whoisCmd).toString());
         nodeCache.set(ip, whoisOutput);
     } else {
-        logger.info(`Cache HIT for IP: ` + ip);
+        logger.info(`🟢 Cache HIT for IP: ` + ip);
         whoisOutput = cacheQuery as Record<string, string>;
     }
     
